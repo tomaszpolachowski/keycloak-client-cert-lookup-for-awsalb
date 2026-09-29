@@ -10,6 +10,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.truststore.TruststoreProvider;
 import org.keycloak.truststore.TruststoreProviderFactory;
+import org.keycloak.services.x509.AbstractClientCertificateFromHttpHeadersLookupFactory;
+import org.keycloak.services.x509.X509ClientCertificateLookup;
 
 import org.jboss.logging.Logger;
 

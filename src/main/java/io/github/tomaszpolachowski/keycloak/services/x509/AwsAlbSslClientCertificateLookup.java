@@ -24,6 +24,7 @@ import org.keycloak.common.crypto.CryptoIntegration;
 import org.keycloak.common.util.PemException;
 import org.keycloak.common.util.PemUtils;
 import org.keycloak.http.HttpRequest;
+import org.keycloak.services.x509.AbstractClientCertificateFromHttpHeadersLookup;
 
 import org.jboss.logging.Logger;
 import org.jboss.logging.Logger.Level;
@@ -41,8 +42,7 @@ public class AwsAlbSslClientCertificateLookup extends AbstractClientCertificateF
     public AwsAlbSslClientCertificateLookup(int certificateChainLength,
                                                 Set<X509Certificate> intermediateCerts,
                                                 Set<X509Certificate> trustedRootCerts,
-                                                boolean isTruststoreLoaded,
-                                                boolean certIsUrlEncoded
+                                                boolean isTruststoreLoaded
                                                 ) {
         super("X-Amzn-Mtls-Clientcert", "", certificateChainLength);
 

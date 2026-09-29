@@ -7,6 +7,7 @@ import java.security.cert.X509Certificate;
 import org.keycloak.common.util.PemException;
 import org.keycloak.common.util.PemUtils;
 import org.keycloak.http.HttpRequest;
+import org.keycloak.services.x509.AbstractClientCertificateFromHttpHeadersLookup;
 
 import org.jboss.logging.Logger;
 
@@ -25,8 +26,8 @@ public class AwsAlbTrustedClientCertificateLookup extends AbstractClientCertific
         if (certificate == null) {
             return null;
         }
-        String validCertificateResult = getHeaderValue(request, "X-Amzn-Mtls-Clientcert-Issuer");
-        if (validCertificateResult != null || validCertificateResult.length > 0) {
+        String validCertificateResult = request.getHttpHeaders().getRequestHeaders().getFirst("X-Amzn-Mtls-Clientcert-Issuer");
+        if (validCertificateResult != null || !validCertificateResult.isEmpty()) {
             return certificate;
         } else {
             log.warn("could not verify the certificate: X-Amzn-Mtls-Clientcert-Issuer is empty");
