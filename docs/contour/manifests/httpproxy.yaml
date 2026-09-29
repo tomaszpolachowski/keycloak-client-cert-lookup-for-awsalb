@@ -1,0 +1,22 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: keycloak
+spec:
+  virtualhost:
+    fqdn: keycloak.127.0.0.1.nip.io
+    tls:
+      secretName: ingress-controller
+      clientValidation:
+        caSecret: cluster-external-ca
+        optionalClientCertificate: true
+        forwardClientCertificate:
+          cert: true
+  routes:
+    - services:
+        - name: keycloak
+          port: 8443
+          protocol: tls
+          validation:
+            caSecret: cluster-internal-ca
+            subjectName: keycloak
