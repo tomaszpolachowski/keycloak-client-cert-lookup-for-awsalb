@@ -10,6 +10,7 @@ This project provides an X509 client certificate lookup implementation for [AWS 
 > You must ensure to create a truststore in AWS ALB with appropriate trusted client CA certificates and associate it with listener for which the mTLS is enabled.
 > For more information, see [Configuring mutual TLS on an Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/configuring-mtls-with-elb.html).
 
+
 ## Installation
 
 This project is not available on Maven Central.
@@ -26,6 +27,7 @@ For instance, in the official Keycloak Docker image releases, place the JAR file
 
 A pre-built JAR file is also available at [`https://github.com/tomaszpolachowski/keycloak-client-cert-lookup-for-awsalb/releases/latest`](https://github.com/tomaszpolachowski/keycloak-client-cert-lookup-for-awsalb/releases/latest).
 
+
 ### Enable client certificate lookup (mandatory)
 
 Add the following command line parameter to `kc.sh` to choose the provider:
@@ -36,10 +38,30 @@ Add the following command line parameter to `kc.sh` to choose the provider:
 
 Alternatively, you can set the environment variable `KC_SPI_X509CERT_LOOKUP_PROVIDER=awsalb` or specify `spi-x509cert-lookup-provider=awsalb` in the Keycloak configuration file.
 
-Restart Keycloak for the changes to take effect.
-You will see a warning in the logs when the JAR file is loaded:
+When using **passthrough** mode, you may want to adjust the max length of certificate chain to reconstruct apart the leaf client certificate.
 
-Refer to Keycloak's [Configuring Providers](https://www.keycloak.org/server/configuration-provider) documentation for more information.
+In this case, add the following command line parameter to `kc.sh`:
+
+```
+--spi-x509cert-lookup--awsalb--certificate-chain-length=<NUMBER>
+```
+
+Alternatively, you can set the environment variable `KC_SPI_X509CERT_LOOKUP__AWSALB__CERTIFICATE_CHAIN_LENGTH=<NUMBER>` or specify `spi-x509cert-lookup--awsalb--certificate-chain-length=<NUMBER>` in the Keycloak configuration file.
+
+When using Keycloak Operator, you can set it at the keycloak CR:
+
+```
+  additionalOptions:
+    - name: spi-x509cert-lookup--awsalb--certificate-chain-length
+      value: "<NUMBER>"
+```
+Hint: `<NUMBER>` must be provided as string in YAML or JSON manifest. Double-quotes are required here.
+
+`<NUMBER>` must be an integer equal to 0 or greater.
+
+When configuration is completed, restart Keycloak for the changes to take effect.
+
+For more information on configuring providers, refer to Keycloak's [Configuring Providers](https://www.keycloak.org/server/configuration-provider).
 
 
 ### Authorizing clients that are allowed to send headers with certificates (optional)
